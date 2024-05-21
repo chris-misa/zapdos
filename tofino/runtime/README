@@ -1,0 +1,22 @@
+# Haskell-based Runtime for ASSURED
+
+# Setup
+
+Assuming a nix environment.
+
+1. Make sure gRPC-haskell submodule is pulled in this directory (from https://github.com/awakesecurity/gRPC-haskell.git). (Current testing is at commit 2f30434fe3526b306dcdb0da78dadf84efa315fc).
+
+2. Run `nix-shell` to enter an environemnt with correct dependencies based on default.nix (which just re-uses some complex derivations the gRPC-haskell project figured out to make this work).
+
+3. Find the correct copy of bfruntime.proto. For bf-sde-9.13.0 it seems to be installed at <bf-sde>/install/share/bf_rt_shared/proto/bfruntime.proto.
+
+4. Get dependencies for bfruntime.proto (for some reason these are not automatically available in gRPC-haskell tools). In particular, recreate the directory structure with files from github like so:
+
+./google/rpc/status.proto --- from https://github.com/googleapis/googleapis/raw/master/google/rpc/status.proto
+./google/protobuf/any.proto --- from https://github.com/protocolbuffers/protobuf/raw/main/src/google/protobuf/any.proto
+
+5. Compile the protobuf specifications to Haskell. Note that you have to compile each .proto file downloaded in previous step. Infuriatingly, the directory names for Haskell outputs must be camel-case whereas the directory names for the .proto files must be all lower-case so there need to be two parallel directory structures (one for the .proto files, one for the .hs outputs). However, the compile-proto-file seems to create these directories automatically. For example,
+
+compile-proto-file --includeDir ./ --proto bfruntime.proto --out ./
+compile-proto-file --includeDir ./ --proto ./google/rpc/status.proto --out ./
+compile-proto-file --includeDir ./ --proto ./google/protobuf/any.proto --out ./
