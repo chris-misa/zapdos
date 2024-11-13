@@ -2,6 +2,11 @@
  - Simple interface for reading packets
  - Uses `pcap` library to read pcap files
  - Exposes high level projections for extracting common header fiels
+ -
+ - Author: Chris Misa
+ - Date: 2024-05-21
+ -
+ - See ../LICENSE for conditions.
  -}
 module Packets where
 
